@@ -2020,19 +2020,14 @@ TEST_CASES = [
 
 def solve(input):
     depths = [int(line) for line in input.strip().split('\n') if line]
-    window_sum = [a+b+c for a,b,c in zip(
+    window_sum = [a + b + c for a, b, c in zip(
         depths[:-2],
         depths[1:-1],
         depths[2:],
     )]
 
-    times = 0
-    last_depth = window_sum.pop(0)
-    for depth in window_sum:
-        if depth > last_depth:
-            times += 1
-        last_depth = depth
-    return times
+    increases = [d0 < d1 for d0, d1 in zip(window_sum[:-1], window_sum[1:])]
+    return sum(increases)
 
 
 if __name__ == '__main__':
