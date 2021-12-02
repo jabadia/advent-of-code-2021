@@ -16,15 +16,15 @@ forward 2
 def solve(input):
     pos = (0, 0, 0)
     for move in input.strip().split('\n'):
-        direction, amount = move.split(' ')
-        amount = int(amount)
+        direction, units = move.split(' ')
+        units = int(units)
         horizontal, depth, aim = pos
         if direction == 'forward':
-            pos = (horizontal + amount, depth + aim * amount, aim)
+            pos = (horizontal + units, depth + aim * units, aim)
         elif direction == 'up':
-            pos = (horizontal, depth, aim - amount)
+            pos = (horizontal, depth, aim - units)
         elif direction == 'down':
-            pos = (horizontal, depth, aim + amount)
+            pos = (horizontal, depth, aim + units)
         else:
             assert False, 'bad direction'
 
