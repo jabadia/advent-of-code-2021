@@ -1,0 +1,63 @@
+from utils.test_case import TestCase
+from d4_input import INPUT
+
+TEST_CASES = [
+    TestCase("""
+7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
+
+22 13 17 11  0
+ 8  2 23  4 24
+21  9 14 16  7
+ 6 10  3 18  5
+ 1 12 20 15 19
+
+ 3 15  0  2 22
+ 9 18 13 17  5
+19  8  7 25 23
+20 11 10 24  4
+14 21 16 12  6
+
+14 21 17 24  4
+10 16 15  9 19
+18  8 23 26 20
+22 11 13  6  5
+ 2  0 12  3  7    
+""", 1924),
+]
+
+
+def solve(input):
+    blocks = input.strip().split('\n\n')
+    sequence = [int(number) for number in blocks[0].split(',')]
+    boards = [
+        [
+            [int(number) for number in row.split()]
+            for row in block.split('\n')
+            ]
+        for block in blocks[1:]
+    ]
+
+    alive_boards = set(range(len(boards)))
+    while sequence:
+        drawn_number = sequence.pop(0)
+        for board_index, board in enumerate(boards):
+            if board_index not in alive_boards:
+                continue
+            for row in board:
+                for pos, number in enumerate(row):
+                    if number == drawn_number:
+                        row[pos] = 0
+                        if sum(row) == 0 or sum(list(zip(*board))[pos]) == 0:
+                            alive_boards.remove(board_index)
+                            if not alive_boards:
+                                return sum(sum(row) for row in board) * drawn_number
+
+    return -1
+
+
+if __name__ == '__main__':
+    for case in TEST_CASES:
+        result = solve(case.case)
+        case.check(result)
+
+    print(solve(INPUT))
