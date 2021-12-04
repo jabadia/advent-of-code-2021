@@ -22,7 +22,7 @@ TEST_CASES = [
 
 # from https://docs.python.org/dev/library/itertools.html#itertools-recipes
 def partition(pred, iterable):
-    "Use a predicate to partition entries into false entries and true entries"
+    """Use a predicate to partition entries into false entries and true entries"""
     # partition(is_odd, range(10)) --> 0 2 4 6 8   and  1 3 5 7 9
     t1, t2 = tee(iterable)
     return filterfalse(pred, t1), filter(pred, t2)
@@ -50,6 +50,7 @@ def solve(input):
 
     oxygen_generator_rating = int(''.join(oxygen_generator_bits), 2)
     co2_scrubber_rating = int(''.join(co2_scrubber_bits), 2)
+
     return oxygen_generator_rating * co2_scrubber_rating
 
 
