@@ -19,31 +19,34 @@ TEST_CASES = [
 ]
 
 
+def inclusive_range(a, b):
+    return range(a, b + 1) if b > a else range(a, b - 1, -1)
+
+
+assert list(inclusive_range(0, 4)) == [0, 1, 2, 3, 4]
+assert list(inclusive_range(4, 0)) == [4, 3, 2, 1, 0]
+
+
 def solve(input):
     lines = input.strip().split('\n')
     world = defaultdict(int)
     for line in lines:
-        line = line.replace(' -> ', ',')
-        x0, y0, x1, y1 = [int(n) for n in line.split(',')]
+        x0, y0, x1, y1 = [int(n) for n in line.replace(' -> ', ',').split(',')]
         if x0 == x1:
-            [y0, y1] = sorted([y0, y1])
-            for y in range(y0, y1 + 1):
+            for y in inclusive_range(y0, y1):
                 world[(x0, y)] += 1
         elif y0 == y1:
-            [x0, x1] = sorted([x0, x1])
-            for x in range(x0, x1 + 1):
+            for x in inclusive_range(x0, x1):
                 world[(x, y0)] += 1
         else:  # diagonal
-            offsetx = 1 if x1 > x0 else -1
-            offsety = 1 if y1 > y0 else -1
-            for i in range(0, abs(x1 - x0) + 1):
-                world[(x0 + i * offsetx, y0 + i * offsety)] += 1
+            for x, y in zip(inclusive_range(x0, x1), inclusive_range(y0, y1)):
+                world[(x, y)] += 1
 
-    for row in range(0, 9):
-        for col in range(0,9):
-            val = world.get((col, row), '.')
-            print(str(val), end='')
-        print()
+    # for row in range(0, 9):
+    #     for col in range(0, 9):
+    #         val = world.get((col, row), '.')
+    #         print(str(val), end='')
+    #     print()
     return sum(line_count > 1 for line_count in world.values())
 
 
