@@ -8,15 +8,19 @@ TEST_CASES = [
 ]
 
 
+# arithmetic series: sum(range(n)) = n * (n-1) // 2
+
 def fuel(positions, align):
     diff = [abs(pos-align) for pos in positions]
-    f = [sum(range(d+1)) for d in diff]
-    return sum(f)
+    return sum(d * (d + 1) // 2 for d in diff)
 
 
 def solve(input):
     positions = [int(n) for n in input.strip().split(',')]
-    return min(fuel(positions, pos) for pos in range(min(positions), max(positions)))
+    return min(
+        fuel(positions, pos)
+        for pos in range(min(positions), max(positions))
+    )
 
 
 if __name__ == '__main__':
