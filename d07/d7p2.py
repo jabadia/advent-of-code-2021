@@ -10,15 +10,18 @@ TEST_CASES = [
 
 # arithmetic series: sum(range(n)) = n * (n-1) // 2
 
+def fuel(positions, align):
+    return sum(
+        delta * (delta + 1) // 2
+        for delta in
+        (abs(pos - align) for pos in positions)
+    )
+
 
 def solve(input):
     positions = [int(n) for n in input.strip().split(',')]
     return min(
-        sum(
-            delta * (delta + 1) // 2
-            for delta in
-            (abs(pos - align) for pos in positions)
-        )
+        fuel(positions, align)
         for align in range(min(positions), max(positions))
     )
 
