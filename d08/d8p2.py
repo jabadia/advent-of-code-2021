@@ -1,3 +1,5 @@
+from functools import reduce
+
 from utils.test_case import TestCase
 from d8_input import INPUT
 
@@ -34,6 +36,10 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 ]
 
 
+def find_first(seq, pred):
+    return next(item for item in seq if pred(item))
+
+
 def solve(input):
     total = 0
     for line in input.strip().split('\n'):
@@ -41,30 +47,24 @@ def solve(input):
         patterns = [set(pattern) for pattern in patterns.split(' ')]
         output = [set(pattern) for pattern in output.split(' ')]
 
-        solved = {}
+        solved = [None] * 10
 
-        solved[1] = next(digit for digit in patterns if len(digit) == 2)
-        solved[7] = next(digit for digit in patterns if len(digit) == 3)
-        solved[8] = next(digit for digit in patterns if len(digit) == 7)
-        solved[4] = next(digit for digit in patterns if len(digit) == 4)
+        solved[1] = find_first(patterns, lambda digit: len(digit) == 2)
+        solved[7] = find_first(patterns, lambda digit: len(digit) == 3)
+        solved[8] = find_first(patterns, lambda digit: len(digit) == 7)
+        solved[4] = find_first(patterns, lambda digit: len(digit) == 4)
+
+        maybe_069 = [digit for digit in patterns if len(digit) == 6]
+        solved[6] = find_first(maybe_069, lambda digit: len(digit & solved[1]) == 1)
+        solved[9] = find_first(maybe_069, lambda digit: len(digit & solved[4]) == 4)
+        solved[0] = find_first(maybe_069, lambda digit: digit != solved[9] and digit != solved[6])
 
         maybe_235 = [digit for digit in patterns if len(digit) == 5]
-        maybe_069 = [digit for digit in patterns if len(digit) == 6]
+        solved[3] = find_first(maybe_235, lambda digit: len(digit & solved[1]) == 2)
+        solved[5] = find_first(maybe_235, lambda digit: len(digit & solved[6]) == 5)
+        solved[2] = find_first(maybe_235, lambda digit: digit != solved[3] and digit != solved[5])
 
-        solved[6] = next(digit for digit in maybe_069 if len(digit & solved[1]) == 1)
-        solved[9] = next(digit for digit in maybe_069 if len(digit & solved[4]) == 4)
-        solved[0] = next(digit for digit in maybe_069 if digit != solved[9] and digit != solved[6])
-
-        solved[3] = next(digit for digit in maybe_235 if len(digit & solved[1]) == 2)
-        solved[5] = next(digit for digit in maybe_235 if len(digit & solved[6]) == 5)
-        solved[2] = next(digit for digit in maybe_235 if digit != solved[3] and digit != solved[5])
-
-        result = 0
-        for digit in output:
-            val = next(val for val, pattern in solved.items() if pattern == digit)
-            result = result * 10 + val
-
-        total += result
+        total += reduce(lambda acc, digit: 10 * acc + solved.index(digit), output, 0)
 
     return total
 
