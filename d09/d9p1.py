@@ -11,20 +11,23 @@ TEST_CASES = [
 """, 15),
 ]
 
-NEIGHBOURS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-
 
 def solve(input):
     heightmap = [[int(h) for h in row] for row in input.strip().split('\n')]
     rows = len(heightmap)
     cols = len(heightmap[0])
 
+    def neighbours(pos):
+        for delta in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            neighbour = pos[0] + delta[0], pos[1] + delta[1]
+            if 0 <= neighbour[0] < rows and 0 <= neighbour[1] < cols:
+                yield neighbour
+
     def risk(row, col):
         height = heightmap[row][col]
-        for delta_row, delta_col in NEIGHBOURS:
-            if 0 <= row + delta_row < rows and 0 <= col + delta_col < cols:
-                if height >= heightmap[row + delta_row][col + delta_col]:
-                    return 0
+        for neighbour in neighbours((row, col)):
+            if height >= heightmap[neighbour[0]][neighbour[1]]:
+                return 0
         return height + 1
 
     return sum(risk(row, col) for row in range(rows) for col in range(cols))
