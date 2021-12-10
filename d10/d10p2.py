@@ -51,8 +51,10 @@ def check_line(line):
 
 
 def solve(input):
-    scores = sorted(check_line(line) for line in input.strip().split('\n'))
-    scores = [score for score in scores if score != -1]
+    scores = sorted(filter(
+        lambda score: score != -1,
+        (check_line(line) for line in input.strip().split('\n'))
+    ))
     return scores[len(scores) // 2]
 
 

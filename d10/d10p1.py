@@ -31,7 +31,6 @@ MATCHING = {
 }
 
 
-
 def check_line(line):
     stack = []
     for c in line:
@@ -43,9 +42,11 @@ def check_line(line):
                 return POINTS[c]
     return 0
 
+
 def solve(input):
     score = sum(check_line(line) for line in input.strip().split('\n'))
     return score
+
 
 if __name__ == '__main__':
     for case in TEST_CASES:
