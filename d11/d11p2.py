@@ -31,14 +31,10 @@ def solve(input):
             if 0 <= r < height:
                 for c in range(col - 1, col + 2):
                     if 0 <= c < width:
-                        yield (r, c)
+                        yield r, c
 
-    def print_energy(energy):
-        for row in energy:
-            print(''.join(str(n) if n != 9 else '*' for n in row))
-
-    flash_count = 0
-    for step in range(1000000):
+    step = 1
+    while True:
         # increase energy
         flashes = []
         for row in range(height):
@@ -47,27 +43,25 @@ def solve(input):
                 if energy[row][col] == 10:
                     flashes.append((row, col))
 
-        # print_energy(energy)
-
         # flash
         flashed = []
         while flashes:
             row, col = flashes.pop()
-            flash_count += 1
-            flashed.append((row,col))
+            flashed.append((row, col))
             for r, c in neighbours(row, col):
                 energy[r][c] += 1
                 if energy[r][c] == 10:
                     flashes.append((r, c))
 
         if len(flashed) == height * width:
-            return step + 1
+            return step
 
+        # reset to 0
         while flashed:
             row, col = flashed.pop()
             energy[row][col] = 0
 
-    return -1
+        step += 1
 
 
 if __name__ == '__main__':
