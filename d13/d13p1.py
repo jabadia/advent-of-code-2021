@@ -29,23 +29,12 @@ fold along x=5
 ]
 
 
-def print_paper(paper):
-    max_x = max(x for x, y in paper)
-    max_y = max(y for x, y in paper)
-    for y in range(max_y+1):
-        for x in range(max_x+1):
-            print('##' if (x, y) in paper else '  ', end='')
-        print()
-
-
 def solve(input):
     dots, fold_instructions = input.strip().split('\n\n')
-    paper = set()
-    for dot in dots.strip().split('\n'):
-        x, y = dot.split(',')
-        x = int(x)
-        y = int(y)
-        paper.add((x, y))
+    paper = {
+        tuple(map(int, dot.split(',')))
+        for dot in dots.strip().split('\n')
+    }
 
     for instruction in fold_instructions.strip().split('\n'):
         match instruction.split('='):

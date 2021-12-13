@@ -40,12 +40,10 @@ def print_paper(paper):
 
 def solve(input):
     dots, fold_instructions = input.strip().split('\n\n')
-    paper = set()
-    for dot in dots.strip().split('\n'):
-        x, y = dot.split(',')
-        x = int(x)
-        y = int(y)
-        paper.add((x, y))
+    paper = {
+        tuple(map(int, dot.split(',')))
+        for dot in dots.strip().split('\n')
+    }
 
     for instruction in fold_instructions.strip().split('\n'):
         match instruction.split('='):
