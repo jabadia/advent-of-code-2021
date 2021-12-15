@@ -34,17 +34,17 @@ def solve(input):
                 yield row + delta_row, col + delta_col
 
     target = (height - 1, width - 1)
-    queue = [(0, (0, 0))]
-    visited = set()
+
+    start = (0, 0)
+    queue = [(0, start)]
+    visited = {start}
     while queue:
         risk, pos = heapq.heappop(queue)
-        if pos in visited:
-            continue
         if pos == target:
             return risk
-        visited.add(pos)
         for neighbour in neighbours(pos):
             if neighbour not in visited:
+                visited.add(neighbour)
                 heapq.heappush(queue, (risk + risk_levels[neighbour[0]][neighbour[1]], neighbour))
 
     return -1
