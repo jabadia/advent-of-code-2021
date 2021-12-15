@@ -21,29 +21,22 @@ TEST_CASES = [
 ]
 
 
-# @timing
+@timing
 def solve(input):
-    rows = input.strip().split('\n')
-    width = len(rows[0])
-    height = len(rows)
     risk_levels = [
-        [
-            ((int(n) + i // width + j // height - 1) % 9) + 1
-            for i, n in enumerate(list(row) * 5)
-        ]
-        for j, row in enumerate(rows * 5)
+        [int(n) for n in list(row)]
+        for row in input.strip().split('\n')
     ]
-
-    width *= 5
-    height *= 5
+    height = len(risk_levels)
+    width = len(risk_levels[0])
 
     def neighbours(pos):
         row, col = pos
         for delta_row, delta_col in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            if 0 <= row + delta_row < height and 0 <= col + delta_col < width:
+            if 0 <= row + delta_row < height * 5 and 0 <= col + delta_col < width * 5:
                 yield row + delta_row, col + delta_col
 
-    target = (height - 1, width - 1)
+    target = (5 * height - 1, 5 * width - 1)
 
     start = (0, 0)
     queue = [(0, start)]
@@ -55,7 +48,9 @@ def solve(input):
         for neighbour in neighbours(pos):
             if neighbour not in visited:
                 visited.add(neighbour)
-                heapq.heappush(queue, (risk + risk_levels[neighbour[0]][neighbour[1]], neighbour))
+                row, col = neighbour
+                neighbour_risk = (risk_levels[row % width][col % height] + row // height + col // width - 1) % 9 + 1
+                heapq.heappush(queue, (risk + neighbour_risk, neighbour))
 
     return -1
 
