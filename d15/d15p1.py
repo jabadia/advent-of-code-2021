@@ -54,16 +54,17 @@ def solve(input):
     visited = set()
     while queue:
         risk, pos = heapq.heappop(queue)
-        visited.add(pos)
+        if pos in visited:
+            continue
         if pos == target:
             return risk
+        visited.add(pos)
         for neighbour in neighbours(pos):
             if neighbour not in visited:
-                if (risk + risk_levels[neighbour[0]][neighbour[1]], neighbour) not in queue:
-                    heapq.heappush(queue, (
-                        risk + risk_levels[neighbour[0]][neighbour[1]],
-                        neighbour,
-                    ))
+                heapq.heappush(queue, (
+                    risk + risk_levels[neighbour[0]][neighbour[1]],
+                    neighbour,
+                ))
 
     return -1
 

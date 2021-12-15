@@ -4,6 +4,8 @@ from utils.test_case import TestCase
 from d15_input import INPUT
 from colorama import Style, Fore
 
+from utils.timing import timing
+
 TEST_CASES = [
     TestCase("""
 1163751742
@@ -33,6 +35,7 @@ def print_solution(risk_levels, visited):
     print()
 
 
+@timing
 def solve(input):
     risk_levels = [
         [int(n) for n in list(row)]
@@ -64,16 +67,14 @@ def solve(input):
     visited = set()
     while queue:
         risk, pos = heapq.heappop(queue)
-        visited.add(pos)
+        if pos in visited:
+            continue
         if pos == target:
             return risk
+        visited.add(pos)
         for neighbour in neighbours(pos):
             if neighbour not in visited:
-                if (risk + risk_levels[neighbour[0]][neighbour[1]], neighbour) not in queue:
-                    heapq.heappush(queue, (
-                        risk + risk_levels[neighbour[0]][neighbour[1]],
-                        neighbour,
-                    ))
+                heapq.heappush(queue, (risk + risk_levels[neighbour[0]][neighbour[1]], neighbour))
 
     return -1
 
