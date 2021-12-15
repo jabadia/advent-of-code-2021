@@ -1,6 +1,7 @@
 # started 2021-12-12T22:40:45.589478
 from collections import defaultdict
 
+from utils.timing import timing
 from utils.test_case import TestCase
 from d12_input import INPUT
 
@@ -49,6 +50,7 @@ start-RW
 ]
 
 
+@timing
 def solve(input):
     graph = defaultdict(set)
     for edge in input.strip().split('\n'):

@@ -3,6 +3,7 @@ from collections import Counter
 
 from utils.test_case import TestCase
 from d14_input import INPUT
+from utils.timing import timing
 
 TEST_CASES = [
     TestCase("""
@@ -28,6 +29,7 @@ CN -> C
 ]
 
 
+@timing
 def solve(input):
     polymer, rules = input.strip().split('\n\n')
     rules = dict(rule.split(' -> ') for rule in rules.strip().split('\n'))
@@ -54,8 +56,6 @@ def solve(input):
 
     element_count[first] += 1
     element_count[last] += 1
-    print(element_count.most_common())
-    print(list((element, count // 2) for element, count in element_count.most_common()))
 
     freq = element_count.most_common()
     return freq[0][1] // 2 - freq[-1][1] // 2

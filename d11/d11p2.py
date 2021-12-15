@@ -1,6 +1,7 @@
 # started 2021-12-11T21:46:37.058543
 from utils.test_case import TestCase
 from d11_input import INPUT
+from utils.timing import timing
 
 TEST_CASES = [
     TestCase("""
@@ -17,7 +18,7 @@ TEST_CASES = [
 """, 195),
 ]
 
-
+@timing
 def solve(input):
     energy = [
         [int(n) for n in list(row)]
