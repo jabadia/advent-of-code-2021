@@ -2,7 +2,6 @@
 import heapq
 from utils.test_case import TestCase
 from d15_input import INPUT
-from colorama import Style, Fore
 
 from utils.timing import timing
 
@@ -22,48 +21,31 @@ TEST_CASES = [
 ]
 
 
-def print_solution(risk_levels, visited):
-    for j, row in enumerate(risk_levels):
-        for i, n in enumerate(row):
-            if (j, i) in visited:
-                print(Style.BRIGHT, end='')
-            else:
-                print(Fore.WHITE, end='')
-            print(n, end='')
-            print(Style.RESET_ALL, end='')
-        print()
-    print()
-
-
-@timing
+# @timing
 def solve(input):
+    rows = input.strip().split('\n')
+    width = len(rows[0])
+    height = len(rows)
     risk_levels = [
-        [int(n) for n in list(row)]
-        for row in input.strip().split('\n')
+        [
+            ((int(n) + i // width + j // height - 1) % 9) + 1
+            for i, n in enumerate(list(row) * 5)
+        ]
+        for j, row in enumerate(rows * 5)
     ]
 
-    height = len(risk_levels)
-    width = len(risk_levels[0])
-
-    for j, row in enumerate(risk_levels):
-        risk_levels[j] = [((n + i - 1) % 9) + 1 for i in range(5) for n in row]
-    for i in range(1, 5):
-        for j in range(height):
-            risk_levels.append([((n + i - 1) % 9) +1 for n in risk_levels[j]])
-
-    height = len(risk_levels)
-    width = len(risk_levels[0])
-
-    start = (0, 0)
-    target = (height - 1, width - 1)
+    width *= 5
+    height *= 5
 
     def neighbours(pos):
         row, col = pos
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            if 0 <= row + dr < height and 0 <= col + dc < width:
-                yield row + dr, col + dc
+        for delta_row, delta_col in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            if 0 <= row + delta_row < height and 0 <= col + delta_col < width:
+                yield row + delta_row, col + delta_col
 
-    queue = [(0, start)]
+    target = (height - 1, width - 1)
+
+    queue = [(0, (0, 0))]
     visited = set()
     while queue:
         risk, pos = heapq.heappop(queue)
